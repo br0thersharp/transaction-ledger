@@ -5,7 +5,9 @@ use transactions_ledger::engine::{HashMapStore, Processor};
 use transactions_ledger::io::{CsvEmitter, CsvIngester, Emitter, Ingester};
 
 fn main() -> Result<(), Box<dyn std::error::Error>> {
-    let input_path = env::args().nth(1).expect("usage: transactions_ledger <input.csv>");
+    let input_path = env::args()
+        .nth(1)
+        .expect("usage: transactions_ledger <input.csv>");
     let file = File::open(input_path)?;
 
     let ingester = CsvIngester;

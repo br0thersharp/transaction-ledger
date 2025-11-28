@@ -3,8 +3,8 @@ use std::io::{Read, Write};
 use serde::Deserialize;
 
 use crate::core::errors::CoreError;
-use crate::core::types::{Amount, AccountRow, ClientId, TxId, Transaction, TransactionType};
-use crate::io::{Emitter, Ingester, IngestEvent};
+use crate::core::types::{AccountRow, Amount, ClientId, Transaction, TransactionType, TxId};
+use crate::io::{Emitter, IngestEvent, Ingester};
 
 #[derive(Debug, Deserialize)]
 struct CsvRow {
@@ -29,10 +29,7 @@ fn parse_kind(s: &str) -> Result<TransactionType, CoreError> {
 pub struct CsvIngester;
 
 impl Ingester for CsvIngester {
-    fn ingest<'a>(
-        &self,
-        input: Box<dyn Read + 'a>,
-    ) -> Box<dyn Iterator<Item = IngestEvent> + 'a> {
+    fn ingest<'a>(&self, input: Box<dyn Read + 'a>) -> Box<dyn Iterator<Item = IngestEvent> + 'a> {
         let rdr = csv::ReaderBuilder::new()
             .trim(csv::Trim::All)
             .flexible(true)
@@ -75,14 +72,8 @@ impl Ingester for CsvIngester {
 pub struct CsvEmitter;
 
 impl Emitter for CsvEmitter {
-    fn emit(
-        &self,
-        rows: &[AccountRow],
-        out: &mut dyn Write,
-    ) -> std::io::Result<()> {
-        let mut wtr = csv::WriterBuilder::new()
-            .has_headers(true)
-            .from_writer(out);
+    fn emit(&self, rows: &[AccountRow], out: &mut dyn Write) -> std::io::Result<()> {
+        let mut wtr = csv::WriterBuilder::new().has_headers(true).from_writer(out);
 
         wtr.write_record(["client", "available", "held", "total", "locked"])?;
 

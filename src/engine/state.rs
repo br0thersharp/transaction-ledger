@@ -1,6 +1,6 @@
-use std::collections::HashMap;
 use crate::core::types::*;
 use crate::engine::store::TxStore;
+use std::collections::HashMap;
 
 #[derive(Debug, Clone)]
 pub struct AccountState {
@@ -11,7 +11,11 @@ pub struct AccountState {
 
 impl AccountState {
     pub fn new() -> Self {
-        Self { available: Amount::zero(), held: Amount::zero(), locked: false }
+        Self {
+            available: Amount::zero(),
+            held: Amount::zero(),
+            locked: false,
+        }
     }
 
     pub fn total(&self) -> Amount {
@@ -41,10 +45,15 @@ pub struct EngineState<S: TxStore> {
 
 impl<S: TxStore> EngineState<S> {
     pub fn new(store: S) -> Self {
-        Self { accounts: HashMap::new(), store }
+        Self {
+            accounts: HashMap::new(),
+            store,
+        }
     }
 
     pub fn account_mut(&mut self, client: ClientId) -> &mut AccountState {
-        self.accounts.entry(client).or_insert_with(AccountState::new)
+        self.accounts
+            .entry(client)
+            .or_insert_with(AccountState::new)
     }
 }

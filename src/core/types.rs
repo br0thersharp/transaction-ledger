@@ -1,6 +1,6 @@
+use crate::core::errors::{CoreError, LedgerError};
 use std::fmt;
 use std::ops::{Add, AddAssign, Sub, SubAssign};
-use crate::core::errors::{CoreError, LedgerError};
 
 pub type ClientId = u16;
 pub type TxId = u32;
@@ -13,9 +13,13 @@ pub struct Amount(i64);
 impl Amount {
     pub const SCALE: i64 = 10_000;
 
-    pub fn zero() -> Self { Amount(0) }
+    pub fn zero() -> Self {
+        Amount(0)
+    }
 
-    pub fn as_i64(self) -> i64 { self.0 }
+    pub fn as_i64(self) -> i64 {
+        self.0
+    }
 
     pub fn from_str_4dp(s: &str) -> Result<Self, CoreError> {
         let s = s.trim();
@@ -37,9 +41,7 @@ impl Amount {
             return Err(CoreError::ParseAmount);
         }
 
-        let whole: i64 = whole_str
-            .parse()
-            .map_err(|_| CoreError::ParseAmount)?;
+        let whole: i64 = whole_str.parse().map_err(|_| CoreError::ParseAmount)?;
 
         // allow "1." or no decimals as "1.0000"
         let decimals_str = if parts.len() == 2 { parts[1] } else { "" };
@@ -58,9 +60,7 @@ impl Amount {
             return Err(CoreError::ParseAmount);
         }
 
-        let mut decimals: i64 = decimals_str
-            .parse()
-            .map_err(|_| CoreError::ParseAmount)?;
+        let mut decimals: i64 = decimals_str.parse().map_err(|_| CoreError::ParseAmount)?;
 
         for _ in 0..(4 - decimals_len) {
             decimals *= 10;
@@ -88,17 +88,25 @@ impl Amount {
 // Do NOT use these in ledger/state mutations; use checked_* instead.
 impl Add for Amount {
     type Output = Amount;
-    fn add(self, rhs: Amount) -> Amount { Amount(self.0 + rhs.0) }
+    fn add(self, rhs: Amount) -> Amount {
+        Amount(self.0 + rhs.0)
+    }
 }
 impl Sub for Amount {
     type Output = Amount;
-    fn sub(self, rhs: Amount) -> Amount { Amount(self.0 - rhs.0) }
+    fn sub(self, rhs: Amount) -> Amount {
+        Amount(self.0 - rhs.0)
+    }
 }
 impl AddAssign for Amount {
-    fn add_assign(&mut self, rhs: Amount) { self.0 += rhs.0; }
+    fn add_assign(&mut self, rhs: Amount) {
+        self.0 += rhs.0;
+    }
 }
 impl SubAssign for Amount {
-    fn sub_assign(&mut self, rhs: Amount) { self.0 -= rhs.0; }
+    fn sub_assign(&mut self, rhs: Amount) {
+        self.0 -= rhs.0;
+    }
 }
 
 impl fmt::Display for Amount {
