@@ -177,5 +177,7 @@ impl<S: TxStore> Processor<S> {
         rows
     }
 
-    pub fn state(&self) -> &EngineState<S> { &self.state }   
+    pub fn state(&self) -> &EngineState<S> {
+        &self.state
+    }
 }
