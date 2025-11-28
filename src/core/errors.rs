@@ -21,6 +21,7 @@ impl std::error::Error for CoreError {}
 
 #[derive(Debug)]
 pub enum LedgerError {
+    DisputeOnWithdrawal,
     InsufficientFunds,
     TxAlreadyDisputed,
     TxNotDisputed,
@@ -31,6 +32,7 @@ pub enum LedgerError {
 impl fmt::Display for LedgerError {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         match self {
+            LedgerError::DisputeOnWithdrawal => write!(f, "you can't dispute a withdrawal"), // disputing a withdrawal breaks the spec. more in README.md assumptions
             LedgerError::InsufficientFunds => write!(f, "insufficient funds"),
             LedgerError::TxAlreadyDisputed => write!(f, "transaction already disputed"), // for disputing the same tx twice
             LedgerError::TxNotDisputed => write!(f, "transaction not disputed"), // for performing a chargeback or a resolve on a non-disputed tx

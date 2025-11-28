@@ -176,4 +176,6 @@ impl<S: TxStore> Processor<S> {
         rows.sort_by_key(|r| r.client);
         rows
     }
+
+    pub fn state(&self) -> &EngineState<S> { &self.state }   
 }

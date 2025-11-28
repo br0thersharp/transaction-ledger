@@ -56,4 +56,8 @@ impl<S: TxStore> EngineState<S> {
             .entry(client)
             .or_insert_with(AccountState::new)
     }
+
+    pub fn accounts_iter(&self) -> impl Iterator<Item = (&u16, &AccountState)> {
+        self.accounts.iter()
+    }
 }
